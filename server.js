@@ -143,5 +143,5 @@ app.get('/api/getmessages', async (req, res, next) => {
   }
 });
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8001;
 server.listen(PORT, () => console.log(`🚀 @ http://localhost:${PORT}`));
