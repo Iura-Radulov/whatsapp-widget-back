@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 
 let clients = [];
 
-app.get('/api', (req, res) => {
+app.get('/api', res => {
   res.send({ status: 'Server is working!' });
 });
 
