@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: '*',
+    origin: 'https://iura-radulov.github.io/whatsapp-widget/',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
     optionsSuccessStatus: 204,
