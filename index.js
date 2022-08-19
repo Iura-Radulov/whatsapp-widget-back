@@ -1,5 +1,5 @@
 const express = require('express');
-// const cors = require('cors');
+const cors = require('cors');
 // const http = require('http');
 // const bodyParser = require('body-parser');
 const { Client, LocalAuth } = require('whatsapp-web.js');
@@ -7,15 +7,19 @@ require('dotenv').config();
 
 const PORT = process.env.PORT || 8001;
 
-// app.use(cors());
-
 const app = express();
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
+app.use(
+  cors({
+    origin: '*',
+    credentials: true,
+  })
+);
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+//   next();
+// });
 
 // app.use(
 //   cors({
