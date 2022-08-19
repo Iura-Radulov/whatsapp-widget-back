@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 let clients = [];
 
 app.get('/', res => {
-  res.send({ status: 'Server is working!' });
+  res.end('<h1>Home page</>');
 });
 
 app.get('/api/createClient', async (req, res) => {
