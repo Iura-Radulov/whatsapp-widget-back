@@ -6,9 +6,9 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 require('dotenv').config();
 
 const PORT = process.env.PORT || 8001;
-// var HOST = process.env.HOST || '0.0.0.0';
+
 const app = express();
-// const server = http.createServer(app);
+
 app.use(
   cors({
     origin: '*',
@@ -20,21 +20,11 @@ app.use(
 app.use(express.json());
 // app.use(bodyParser.json());
 
-// const cors_proxy = require('cors-anywhere');
-// cors_proxy
-//   .createServer({
-//     originWhitelist: [], // Allow all origins
-//     requireHeader: ['origin', 'x-requested-with'],
-//     removeHeaders: ['cookie', 'cookie2'],
-//   })
-//   .listen(PORT, HOST, function () {
-//     console.log('Running CORS Anywhere on ' + HOST + ':' + PORT);
-//   });
-// let clients = [];
+let clients = [];
 
-// app.get('/', (req, res) => {
-//   res.end('<h1>Home page</>');
-// });
+app.get('/', (req, res) => {
+  res.end('<h1>Home page</>');
+});
 
 app.get('/api/createClient', async (req, res) => {
   const clientId = req.query.client;
