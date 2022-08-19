@@ -7,7 +7,7 @@ require('dotenv').config();
 
 const PORT = process.env.PORT || 8001;
 
-app.options('*', cors());
+app.use(cors());
 
 const app = express();
 
@@ -24,11 +24,11 @@ app.use(express.json());
 
 let clients = [];
 
-app.get('/', cors(), (req, res) => {
+app.get('/', (req, res) => {
   res.end('<h1>Home page</>');
 });
 
-app.get('/api/createClient', cors(), async (req, res) => {
+app.get('/api/createClient', async (req, res) => {
   const clientId = req.query.client;
   const isClient = clients.find(x => x.clientId === clientId);
   if (typeof clientId === 'string') {
@@ -65,7 +65,7 @@ app.get('/api/createClient', cors(), async (req, res) => {
   }
 });
 
-app.get('/api/getClient', cors(), async (req, res) => {
+app.get('/api/getClient', async (req, res) => {
   const clientId = req.query.client;
   const client = clients.find(x => x.clientId === clientId);
   if (client) {
@@ -80,7 +80,7 @@ app.get('/api/getClient', cors(), async (req, res) => {
   }
 });
 
-app.get('/api/logout', cors(), (req, res) => {
+app.get('/api/logout', (req, res) => {
   const clientId = req.query.client;
   const client = clients.find(x => x.clientId === clientId);
   if (client) {
@@ -101,7 +101,7 @@ app.get('/api/logout', cors(), (req, res) => {
   }
 });
 
-app.get('/api/getChats', cors(), async (req, res) => {
+app.get('/api/getChats', async (req, res) => {
   const clientId = req.query.client;
   const client = clients.find(x => x.clientId === clientId);
   if (client) {
@@ -116,7 +116,7 @@ app.get('/api/getChats', cors(), async (req, res) => {
   }
 });
 
-app.get('/api/sendmessage', cors(), async (req, res, next) => {
+app.get('/api/sendmessage', async (req, res, next) => {
   const clientId = req.query.client;
   const client = clients.find(x => x.clientId === clientId);
   if (client) {
@@ -135,7 +135,7 @@ app.get('/api/sendmessage', cors(), async (req, res, next) => {
   }
 });
 
-app.get('/api/getmessages', cors(), async (req, res, next) => {
+app.get('/api/getmessages', async (req, res, next) => {
   const clientId = req.query.client;
   const client = clients.find(x => x.clientId === clientId);
   if (client) {
