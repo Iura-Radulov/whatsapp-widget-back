@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 // const http = require('http');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 require('dotenv').config();
 
@@ -37,7 +37,7 @@ app.get('/api/createClient', async (req, res) => {
     try {
       const client = new Client({
         authStrategy: new LocalAuth({ clientId: clientId, dataPath: './sessions' }),
-        puppeteer: { executablePath: '/usr/bin/chromium-browser', args: ['--no-sandbox'] },
+        // puppeteer: { executablePath: '/usr/bin/chromium-browser', args: ['--no-sandbox'] },
       });
       client.initialize();
       clients.push({ clientId: clientId, client: client });
