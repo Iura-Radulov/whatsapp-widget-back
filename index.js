@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 
 let clients = [];
 
-app.get('/', res => {
+app.get('/', (req, res) => {
   res.end('<h1>Home page</>');
 });
 
