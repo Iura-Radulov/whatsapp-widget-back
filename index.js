@@ -58,11 +58,12 @@ app.get('/api/createClient', async (req, res) => {
     // }
     try {
       const client = new Client({
-        authStrategy: new LocalAuth({ clientId: clientId, dataPath: './sessions' }),
+        // authStrategy: new LocalAuth({ clientId: clientId, dataPath: './sessions' }),
+        authStrategy: new LocalAuth(),
         // puppeteer: { executablePath: '/usr/bin/chromium-browser', args: ['--no-sandbox'] },
       });
       client.initialize();
-      clients.push({ clientId: clientId, client: client });
+      // clients.push({ clientId: clientId, client: client });
       console.log('client initializing...');
       client.on('qr', qr => {
         console.log('QR updated...');
