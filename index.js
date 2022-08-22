@@ -43,19 +43,19 @@ app.get('/api/createClient', async (req, res) => {
   const clientId = req.query.client;
   const isClient = clients.find(x => x.clientId === clientId);
   if (typeof clientId === 'string') {
-    if (isClient) {
-      try {
-        isClient.client.destroy();
-        const index = clients
-          .map(x => {
-            return x.clientId;
-          })
-          .indexOf(clientId);
-        clients.splice(index, 1);
-      } catch (err) {
-        res.json({ err: 'server error' });
-      }
-    }
+    // if (isClient) {
+    //   try {
+    //     isClient.client.destroy();
+    //     const index = clients
+    //       .map(x => {
+    //         return x.clientId;
+    //       })
+    //       .indexOf(clientId);
+    //     clients.splice(index, 1);
+    //   } catch (err) {
+    //     res.json({ err: 'server error' });
+    //   }
+    // }
     try {
       const client = new Client({
         authStrategy: new LocalAuth({ clientId: clientId, dataPath: './sessions' }),
