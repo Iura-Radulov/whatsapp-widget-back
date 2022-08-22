@@ -4,10 +4,13 @@ const cors = require('cors');
 // const bodyParser = require('body-parser');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 require('dotenv').config();
+const path = require('path');
 
 const PORT = process.env.PORT || 8001;
 
 const app = express();
+
+app.use(express.static(path.join(__dirname, 'build')));
 
 app.use(cors());
 // app.use((req, res, next) => {
@@ -29,8 +32,11 @@ app.use(express.json());
 
 let clients = [];
 
+// app.get('/', (req, res) => {
+//   res.end('<h1>Home page</>');
+// });
 app.get('/', (req, res) => {
-  res.end('<h1>Home page</>');
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 app.get('/api/createClient', async (req, res) => {
