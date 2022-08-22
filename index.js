@@ -2,9 +2,11 @@ const express = require('express');
 const cors = require('cors');
 // const http = require('http');
 // const bodyParser = require('body-parser');
-const { Client, LocalAuth } = require('whatsapp-web.js');
+const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 require('dotenv').config();
 const path = require('path');
+
+const qrcode = require('qrcode-terminal');
 
 const PORT = process.env.PORT || 8001;
 
@@ -41,7 +43,7 @@ app.get('/', (req, res) => {
 
 app.get('/api/createClient', async (req, res) => {
   const clientId = req.query.client;
-  const isClient = clients.find(x => x.clientId === clientId);
+  // const isClient = clients.find(x => x.clientId === clientId);
   if (typeof clientId === 'string') {
     // if (isClient) {
     //   try {
@@ -62,13 +64,16 @@ app.get('/api/createClient', async (req, res) => {
         // authStrategy: new LocalAuth(),
         // puppeteer: { executablePath: '/usr/bin/chromium-browser', args: ['--no-sandbox'] },
       });
-      client.initialize();
+      // client.initialize();
       clients.push({ clientId: clientId, client: client });
       console.log('client initializing...');
       client.on('qr', qr => {
         console.log('QR updated...');
         res.json({ qr: qr });
       });
+
+      client.initialize();
+      // qrcode.generate(qr, { small: true });
     } catch (err) {
       res.json({ err: 'server error' });
     }
@@ -135,9 +140,20 @@ app.get('/api/sendmessage', async (req, res, next) => {
     try {
       const number = req.query.number;
       const message = req.query.message;
-      if (typeof number === 'string' && typeof message === 'string') {
-        const msg = await client.client.sendMessage(`${number}@c.us`, message);
-        res.json({ msg });
+      const type = req.query.type;
+      if (typeof number === 'string' && typeof message === 'string' && type === 'image/png') {
+        const productPath = path.join(__dirname, message.name);
+        const media = MessageMedia.fromFilePath(productPath);
+        const chat = await client.client.getChats();
+        chat.sendMessage(media);
+
+        if (typeof number === 'string' && typeof message === 'string') {
+          const msg = await client.client.sendMessage(`${number}@c.us`, message);
+          res.json({ msg });
+        }
+
+        // const msg = await client.client.sendMessage(`${number}@c.us`, productPath);
+        // res.json({ msg });
       }
     } catch (err) {
       res.json({ err: 'server error' });
@@ -159,6 +175,28 @@ app.get('/api/getmessages', async (req, res, next) => {
         res.json(messages);
       } else {
         res.json({ error: 'Unknown chatId' });
+      }
+    } catch (err) {
+      res.json({ err: 'server error' });
+    }
+  } else {
+    res.json({ err: `${client} not found!` });
+  }
+});
+
+app.get('/api/sendmedia', async (req, res, next) => {
+  const clientId = req.query.client;
+  const client = clients.find(x => x.clientId === clientId);
+  if (client) {
+    try {
+      const number = req.query.number;
+      const message = req.query.message;
+      if (typeof number === 'string' && typeof message === 'string') {
+        const productPath = path.join(__dirname, message.name);
+        console.log(productPath);
+        const media = MessageMedia.fromFilePath(productPath);
+        const chat = await client.client.getChats();
+        chat.sendMessage(media);
       }
     } catch (err) {
       res.json({ err: 'server error' });
