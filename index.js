@@ -15,14 +15,10 @@ app.use(express.static(path.join(__dirname, 'build')));
 
 app.use(cors());
 
-// app.use(express.json());
 app.use(bodyParser.json());
 
 let clients = [];
 
-// app.get('/', (req, res) => {
-//   res.end('<h1>Home page</>');
-// });
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
@@ -47,14 +43,13 @@ app.get('/api/createClient', async (req, res) => {
     try {
       const client = new Client({
         authStrategy: new LocalAuth({ clientId: clientId, dataPath: './sessions' }),
-        puppeteer: {
-          args: ['--no-sandbox'],
-        },
-        // authStrategy: new LocalAuth(),
-        // puppeteer: { executablePath: '/usr/bin/chromium-browser', args: ['--no-sandbox'] },
+        // puppeteer: {
+        //   args: ['--no-sandbox'],
+        // },
       });
       client.initialize();
       clients.push({ clientId: clientId, client: client });
+
       console.log('client initializing...');
       client.on('qr', qr => {
         console.log('QR updated...');
@@ -63,7 +58,6 @@ app.get('/api/createClient', async (req, res) => {
       client.on('ready', () => {
         console.log('Client is ready!');
       });
-      // client.initialize();
     } catch (err) {
       res.json({ err: 'server error' });
     }
@@ -75,6 +69,7 @@ app.get('/api/createClient', async (req, res) => {
 app.get('/api/getClient', async (req, res) => {
   const clientId = req.query.client;
   const client = clients.find(x => x.clientId === clientId);
+
   if (client) {
     try {
       const clientInfo = await client.client.info;
@@ -131,19 +126,10 @@ app.get('/api/sendmessage', async (req, res, next) => {
       const number = req.query.number;
       const message = req.query.message;
 
-      // if (typeof number === 'string' && typeof message === 'string' && type === 'image/png') {
-      //   const productPath = path.join(__dirname, message.name);
-      //   const media = MessageMedia.fromFilePath(productPath);
-      //   const chat = await client.client.getChats();
-      //   chat.sendMessage(media);
-
       if (typeof number === 'string' && typeof message === 'string') {
         const msg = await client.client.sendMessage(`${number}@c.us`, message);
         res.json({ msg });
       }
-
-      // const msg = await client.client.sendMessage(`${number}@c.us`, productPath);
-      // res.json({ msg });
     } catch (err) {
       res.json({ err: 'server error' });
     }
@@ -178,25 +164,16 @@ app.get('/api/sendmedia', async (req, res, next) => {
   const client = clients.find(x => x.clientId === clientId);
   if (client) {
     try {
-      // const number = req.query.number;
-      // const message = req.query.message;
       client.on('message', async msg => {
         if (msg.hasMedia) {
-          const media = await msg.downloadMedia();
-          res.json(media);
-          // const chat = await client.client.getChats();
-          // chat.sendMessage(media);
+          const productPath = path.join(__dirname, req.name);
+          console.log(productPath);
+          res.json(productPath);
+          const media = MessageMedia.fromFilePath(productPath);
+          const chat = await client.client.getChats();
+          chat.sendMessage(media);
         }
       });
-
-      // if (typeof number === 'string' && typeof message === 'string') {
-      //   const productPath = path.join(__dirname, message.name);
-      //   console.log(productPath);
-      //   res.json(productPath);
-      //   const media = MessageMedia.fromFilePath(productPath);
-      //   const chat = await client.client.getChats();
-      //   chat.sendMessage(media);
-      // }
     } catch (err) {
       res.json({ err: 'server error' });
     }
@@ -205,4 +182,4 @@ app.get('/api/sendmedia', async (req, res, next) => {
   }
 });
 
-server.listen(PORT, () => console.log(`🚀 @ http://localhost:${PORT}`));
+server.listen(PORT, () => console.log(`🚀 @ http://localhost:${PORT} ${clients}`));
