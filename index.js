@@ -43,9 +43,9 @@ app.get('/api/createClient', async (req, res) => {
     try {
       const client = new Client({
         authStrategy: new LocalAuth({ clientId: clientId, dataPath: './sessions' }),
-        // puppeteer: {
-        //   args: ['--no-sandbox'],
-        // },
+        puppeteer: {
+          args: ['--no-sandbox'],
+        },
       });
       client.initialize();
       clients.push({ clientId: clientId, client: client });
@@ -182,4 +182,4 @@ app.get('/api/sendmedia', async (req, res, next) => {
   }
 });
 
-server.listen(PORT, () => console.log(`🚀 @ http://localhost:${PORT} ${clients}`));
+server.listen(PORT, () => console.log(`🚀 @ http://localhost:${PORT} `));
